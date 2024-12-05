@@ -28,3 +28,12 @@ outputs:
 runs:
   using: 'node12'
   main: 'dist/index.js'
+
+# Add more steps, for example, you could also specify a pre-action script to be run:
+# pre-actions:
+#   - name: 'Set up Node.js'
+#     uses: actions/setup-node@v2
+#     with:
+#       node-version: '12'
+
+# You can also add any other commands as part of the action if needed.
