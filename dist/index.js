@@ -1,70 +1,8 @@
-module.exports =
-/******/ (function(modules, runtime) { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		var threw = true;
-/******/ 		try {
-/******/ 			modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 			threw = false;
-/******/ 		} finally {
-/******/ 			if(threw) delete installedModules[moduleId];
-/******/ 		}
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	__webpack_require__.ab = __dirname + "/";
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(323);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ({
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
 
-/***/ 87:
-/***/ (function(module) {
-
-module.exports = require("os");
-
-/***/ }),
-
-/***/ 129:
-/***/ (function(module) {
-
-module.exports = require("child_process");
-
-/***/ }),
-
-/***/ 215:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ 351:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -75,8 +13,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const os = __importStar(__webpack_require__(87));
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const os = __importStar(__nccwpck_require__(37));
 /**
  * Commands
  *
@@ -162,71 +100,471 @@ function escapeProperty(s) {
 
 /***/ }),
 
-/***/ 272:
-/***/ (function(module) {
+/***/ 186:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-module.exports = {"name":"command-action","version":"0.1.0","description":"GitHub Action that implements the command design pattern","main":"cli.js","scripts":{"build":"ncc build src/cli.js -o dist"},"repository":{"type":"git","url":""},"keywords":["github-action"],"author":"Link-","license":"MIT","bugs":{"url":""},"homepage":"","dependencies":{"@actions/core":"^1.2.5","commander":"^7.2.0","ncc":"^0.3.6"}};
+"use strict";
 
-/***/ }),
-
-/***/ 323:
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
-
-const meta = __webpack_require__(272);
-const Invoker = __webpack_require__(456);
-const core = __webpack_require__(827)
-const { Command } = __webpack_require__(346);
-
-const program = new Command();
-
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const command_1 = __nccwpck_require__(351);
+const os = __importStar(__nccwpck_require__(37));
+const path = __importStar(__nccwpck_require__(17));
 /**
- * We make use of the default option to fetch the input from our action
- * with core.getInput() only when a value has not been supplied via the CLI.
- * What this means is that, if you provide these parameters the values from
- * the action will be ignored.
- * 
- * This will guarantee that this tool will operate as an action but has an
- * alternative trigger via the CLI.
+ * The code to exit an action
  */
-program
-  .version(meta.version)
-  .option('-c, --command <command name>', 'Command to execute', core.getInput('command'))
-  .option('-t, --token <token>', 'Personal Access Token or GITHUB_TOKEN', core.getInput('token'))
-  .option('-i, --issue-number <number>', 'Issue number', core.getInput('issue-number'))
-  .option('-o, --org <org_name>', 'Organisation name', core.getInput('org'))
-  .option('-r, --repo <repo_name>', 'Repository name', core.getInput('repo'))
-  .parse();
-
+var ExitCode;
+(function (ExitCode) {
+    /**
+     * A code indicating that the action was successful
+     */
+    ExitCode[ExitCode["Success"] = 0] = "Success";
+    /**
+     * A code indicating that the action was a failure
+     */
+    ExitCode[ExitCode["Failure"] = 1] = "Failure";
+})(ExitCode = exports.ExitCode || (exports.ExitCode = {}));
+//-----------------------------------------------------------------------
+// Variables
+//-----------------------------------------------------------------------
 /**
- * await won’t work in the top-level code so we have to wrap it with an
- * anonymous async function and invoke it
+ * Sets env variable for this action and future actions in the job
+ * @param name the name of the variable to set
+ * @param val the value of the variable. Non-string values will be converted to a string via JSON.stringify
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function exportVariable(name, val) {
+    const convertedVal = command_1.toCommandValue(val);
+    process.env[name] = convertedVal;
+    command_1.issueCommand('set-env', { name }, convertedVal);
+}
+exports.exportVariable = exportVariable;
+/**
+ * Registers a secret which will get masked from logs
+ * @param secret value of the secret
+ */
+function setSecret(secret) {
+    command_1.issueCommand('add-mask', {}, secret);
+}
+exports.setSecret = setSecret;
+/**
+ * Prepends inputPath to the PATH (for this action and future actions)
+ * @param inputPath
+ */
+function addPath(inputPath) {
+    command_1.issueCommand('add-path', {}, inputPath);
+    process.env['PATH'] = `${inputPath}${path.delimiter}${process.env['PATH']}`;
+}
+exports.addPath = addPath;
+/**
+ * Gets the value of an input.  The value is also trimmed.
  *
- * More details: https://javascript.info/async-await
+ * @param     name     name of the input to get
+ * @param     options  optional. See InputOptions.
+ * @returns   string
  */
-(async () => {
-  try {
-    const options = program.opts();
-    const invoker = new Invoker(options);
-    const result = await invoker.executeCommand(options);
-    core.setOutput("result", result);
-  } catch (Error) {
-    core.setFailed(` ⚠️  ${Error.message}`);
-  }
-})()
+function getInput(name, options) {
+    const val = process.env[`INPUT_${name.replace(/ /g, '_').toUpperCase()}`] || '';
+    if (options && options.required && !val) {
+        throw new Error(`Input required and not supplied: ${name}`);
+    }
+    return val.trim();
+}
+exports.getInput = getInput;
+/**
+ * Sets the value of an output.
+ *
+ * @param     name     name of the output to set
+ * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function setOutput(name, value) {
+    command_1.issueCommand('set-output', { name }, value);
+}
+exports.setOutput = setOutput;
+/**
+ * Enables or disables the echoing of commands into stdout for the rest of the step.
+ * Echoing is disabled by default if ACTIONS_STEP_DEBUG is not set.
+ *
+ */
+function setCommandEcho(enabled) {
+    command_1.issue('echo', enabled ? 'on' : 'off');
+}
+exports.setCommandEcho = setCommandEcho;
+//-----------------------------------------------------------------------
+// Results
+//-----------------------------------------------------------------------
+/**
+ * Sets the action status to failed.
+ * When the action exits it will be with an exit code of 1
+ * @param message add error issue message
+ */
+function setFailed(message) {
+    process.exitCode = ExitCode.Failure;
+    error(message);
+}
+exports.setFailed = setFailed;
+//-----------------------------------------------------------------------
+// Logging Commands
+//-----------------------------------------------------------------------
+/**
+ * Gets whether Actions Step Debug is on or not
+ */
+function isDebug() {
+    return process.env['RUNNER_DEBUG'] === '1';
+}
+exports.isDebug = isDebug;
+/**
+ * Writes debug message to user log
+ * @param message debug message
+ */
+function debug(message) {
+    command_1.issueCommand('debug', {}, message);
+}
+exports.debug = debug;
+/**
+ * Adds an error issue
+ * @param message error issue message. Errors will be converted to string via toString()
+ */
+function error(message) {
+    command_1.issue('error', message instanceof Error ? message.toString() : message);
+}
+exports.error = error;
+/**
+ * Adds an warning issue
+ * @param message warning issue message. Errors will be converted to string via toString()
+ */
+function warning(message) {
+    command_1.issue('warning', message instanceof Error ? message.toString() : message);
+}
+exports.warning = warning;
+/**
+ * Writes info to log with console.log.
+ * @param message info message
+ */
+function info(message) {
+    process.stdout.write(message + os.EOL);
+}
+exports.info = info;
+/**
+ * Begin an output group.
+ *
+ * Output until the next `groupEnd` will be foldable in this group
+ *
+ * @param name The name of the output group
+ */
+function startGroup(name) {
+    command_1.issue('group', name);
+}
+exports.startGroup = startGroup;
+/**
+ * End an output group.
+ */
+function endGroup() {
+    command_1.issue('endgroup');
+}
+exports.endGroup = endGroup;
+/**
+ * Wrap an asynchronous function call in a group.
+ *
+ * Returns the same type as the function itself.
+ *
+ * @param name The name of the group
+ * @param fn The function to wrap in the group
+ */
+function group(name, fn) {
+    return __awaiter(this, void 0, void 0, function* () {
+        startGroup(name);
+        let result;
+        try {
+            result = yield fn();
+        }
+        finally {
+            endGroup();
+        }
+        return result;
+    });
+}
+exports.group = group;
+//-----------------------------------------------------------------------
+// Wrapper action state
+//-----------------------------------------------------------------------
+/**
+ * Saves state for current action, the state can only be retrieved by this action's post job execution.
+ *
+ * @param     name     name of the state to store
+ * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function saveState(name, value) {
+    command_1.issueCommand('save-state', { name }, value);
+}
+exports.saveState = saveState;
+/**
+ * Gets the value of an state set by this action's main execution.
+ *
+ * @param     name     name of the state to get
+ * @returns   string
+ */
+function getState(name) {
+    return process.env[`STATE_${name}`] || '';
+}
+exports.getState = getState;
+//# sourceMappingURL=core.js.map
 
 /***/ }),
 
-/***/ 346:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ 603:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const Command = __nccwpck_require__(767)
+
+class GetComments extends Command {
+  constructor() {
+    super()
+  }
+
+  name() {
+    return 'get_comments';
+  }
+
+  /**
+   * Run all the validations necessary before you attempt to execute
+   * the command. Here we are doing a simple test just to illustrate the
+   * purpose of this method.
+   *
+   * @param {Object} options 
+   * @returns validation result
+   */
+  validate(options) {
+    if (Object.keys(options).length <= 2) {
+      throw new Error(`Command options must be provided`);
+    }
+    return true;
+  }
+
+  /**
+   * Attempts to execute the work
+   *
+   * @param {Object} options
+   * @returns Result of the execution
+   */
+  async execute(options) {
+    this.validate(options);
+    return JSON.stringify({
+      'status': 'OK',
+      'output': `${this.name()} executed successfully 🙌`
+    });
+  }
+}
+
+module.exports = GetComments
+
+/***/ }),
+
+/***/ 642:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const Command = __nccwpck_require__(767)
+
+class GetIssueDetails extends Command {
+  constructor() {
+    super()
+  }
+
+  name() {
+    return 'get_issue_details';
+  }
+
+  /**
+   * Run all the validations necessary before you attempt to execute
+   * the command. Here we are doing a simple test just to illustrate the
+   * purpose of this method.
+   *
+   * @param {Object} options 
+   * @returns validation result
+   */
+  validate(options) {
+    if (Object.keys(options).length <= 2) {
+      throw new Error(`Command options must be provided`);
+    }
+    return true;
+  }
+
+  /**
+   * Attempts to execute the work
+   *
+   * @param {Object} options
+   * @returns Result of the execution
+   */
+  async execute(options) {
+    this.validate(options);
+    return JSON.stringify({
+      'status': 'OK',
+      'output': `${this.name()} executed successfully 🙌`
+    });
+  }
+}
+
+module.exports = GetIssueDetails
+
+/***/ }),
+
+/***/ 759:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = [
+  __nccwpck_require__(603),
+  __nccwpck_require__(642)
+]
+
+/***/ }),
+
+/***/ 767:
+/***/ ((module) => {
+
+class Command {
+  constructor (options) {
+    if (this.constructor === Command) {
+      throw new Error("Abstract classes can't be instantiated.")
+    }
+  }
+  
+  name () {
+    throw new Error("Method 'name()' must be implemented first")
+  }
+
+  validate () {
+    throw new Error("Method 'validate()' must be implemented first")
+  }
+
+  async execute () {
+    throw new Error("Method 'execute()' must be implemented first")
+  }
+}
+
+module.exports = Command
+
+
+/***/ }),
+
+/***/ 722:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const commands = __nccwpck_require__(759);
+
+class Invoker {
+  constructor(options) {
+    this.commandsList = {};
+    this.options = options || null;
+    this.loadCommands();
+  }
+
+  /**
+   * Create a new instance of each command loaded from ./commands
+   * and add it to the commandsList instance variable
+   */
+  loadCommands() {
+    commands.reduce((accumulator, command) => {
+      let instance = new command(this.options);
+      accumulator[instance.name()] = instance;
+      return accumulator;
+    }, this.commandsList);
+  }
+
+  /**
+   * Runs a number of checks and attemps to execute a command
+   * @param {Object} options 
+   * @returns 
+   */
+  async executeCommand(options) {
+    // It's possible to supply an empty string as a command name so we have
+    // to guard against this
+    if (!options.command) {
+      throw new Error("required option '-c, --command <command name>' command name must be supplied");
+    }
+    // We need to make sure the command name provided matches the name of one of
+    // our loaded commands. Remember, loadCommands() uses the command name
+    // as the key in the commandsList dictionary
+    if (!(options.command in this.commandsList)) {
+      throw new Error(`${options.command} not found in the loaded commands`)
+    }
+    const command = this.commandsList[options.command];
+    // If all the checks pass, we're good to execute the command
+    return await command.execute(options);
+  }
+}
+
+module.exports = Invoker
+
+/***/ }),
+
+/***/ 81:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
+
+/***/ }),
+
+/***/ 361:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("events");
+
+/***/ }),
+
+/***/ 358:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("fs");
+
+/***/ }),
+
+/***/ 37:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("os");
+
+/***/ }),
+
+/***/ 17:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("path");
+
+/***/ }),
+
+/***/ 379:
+/***/ ((module, exports, __nccwpck_require__) => {
 
 /**
  * Module dependencies.
  */
 
-const EventEmitter = __webpack_require__(614).EventEmitter;
-const childProcess = __webpack_require__(129);
-const path = __webpack_require__(622);
-const fs = __webpack_require__(747);
+const EventEmitter = (__nccwpck_require__(361).EventEmitter);
+const childProcess = __nccwpck_require__(81);
+const path = __nccwpck_require__(17);
+const fs = __nccwpck_require__(358);
 
 // @ts-check
 
@@ -2440,439 +2778,98 @@ function incrementNodeInspectorPort(args) {
 
 /***/ }),
 
-/***/ 424:
-/***/ (function(module) {
-
-class Command {
-  constructor (options) {
-    if (this.constructor === Command) {
-      throw new Error("Abstract classes can't be instantiated.")
-    }
-  }
-  
-  name () {
-    throw new Error("Method 'name()' must be implemented first")
-  }
-
-  validate () {
-    throw new Error("Method 'validate()' must be implemented first")
-  }
-
-  async execute () {
-    throw new Error("Method 'execute()' must be implemented first")
-  }
-}
-
-module.exports = Command
-
-
-/***/ }),
-
-/***/ 426:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-module.exports = [
-  __webpack_require__(818),
-  __webpack_require__(788)
-]
-
-/***/ }),
-
-/***/ 456:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const commands = __webpack_require__(426);
-
-class Invoker {
-  constructor(options) {
-    this.commandsList = {};
-    this.options = options || null;
-    this.loadCommands();
-  }
-
-  /**
-   * Create a new instance of each command loaded from ./commands
-   * and add it to the commandsList instance variable
-   */
-  loadCommands() {
-    commands.reduce((accumulator, command) => {
-      let instance = new command(this.options);
-      accumulator[instance.name()] = instance;
-      return accumulator;
-    }, this.commandsList);
-  }
-
-  /**
-   * Runs a number of checks and attemps to execute a command
-   * @param {Object} options 
-   * @returns 
-   */
-  async executeCommand(options) {
-    // It's possible to supply an empty string as a command name so we have
-    // to guard against this
-    if (!options.command) {
-      throw new Error("required option '-c, --command <command name>' command name must be supplied");
-    }
-    // We need to make sure the command name provided matches the name of one of
-    // our loaded commands. Remember, loadCommands() uses the command name
-    // as the key in the commandsList dictionary
-    if (!(options.command in this.commandsList)) {
-      throw new Error(`${options.command} not found in the loaded commands`)
-    }
-    const command = this.commandsList[options.command];
-    // If all the checks pass, we're good to execute the command
-    return await command.execute(options);
-  }
-}
-
-module.exports = Invoker
-
-/***/ }),
-
-/***/ 614:
-/***/ (function(module) {
-
-module.exports = require("events");
-
-/***/ }),
-
-/***/ 622:
-/***/ (function(module) {
-
-module.exports = require("path");
-
-/***/ }),
-
-/***/ 747:
-/***/ (function(module) {
-
-module.exports = require("fs");
-
-/***/ }),
-
-/***/ 788:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const Command = __webpack_require__(424)
-
-class GetIssueDetails extends Command {
-  constructor() {
-    super()
-  }
-
-  name() {
-    return 'get_issue_details';
-  }
-
-  /**
-   * Run all the validations necessary before you attempt to execute
-   * the command. Here we are doing a simple test just to illustrate the
-   * purpose of this method.
-   *
-   * @param {Object} options 
-   * @returns validation result
-   */
-  validate(options) {
-    if (Object.keys(options).length <= 2) {
-      throw new Error(`Command options must be provided`);
-    }
-    return true;
-  }
-
-  /**
-   * Attempts to execute the work
-   *
-   * @param {Object} options
-   * @returns Result of the execution
-   */
-  async execute(options) {
-    this.validate(options);
-    return JSON.stringify({
-      'status': 'OK',
-      'output': `${this.name()} executed successfully 🙌`
-    });
-  }
-}
-
-module.exports = GetIssueDetails
-
-/***/ }),
-
-/***/ 818:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-const Command = __webpack_require__(424)
-
-class GetComments extends Command {
-  constructor() {
-    super()
-  }
-
-  name() {
-    return 'get_comments';
-  }
-
-  /**
-   * Run all the validations necessary before you attempt to execute
-   * the command. Here we are doing a simple test just to illustrate the
-   * purpose of this method.
-   *
-   * @param {Object} options 
-   * @returns validation result
-   */
-  validate(options) {
-    if (Object.keys(options).length <= 2) {
-      throw new Error(`Command options must be provided`);
-    }
-    return true;
-  }
-
-  /**
-   * Attempts to execute the work
-   *
-   * @param {Object} options
-   * @returns Result of the execution
-   */
-  async execute(options) {
-    this.validate(options);
-    return JSON.stringify({
-      'status': 'OK',
-      'output': `${this.name()} executed successfully 🙌`
-    });
-  }
-}
-
-module.exports = GetComments
-
-/***/ }),
-
-/***/ 827:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ 147:
+/***/ ((module) => {
 
 "use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const command_1 = __webpack_require__(215);
-const os = __importStar(__webpack_require__(87));
-const path = __importStar(__webpack_require__(622));
-/**
- * The code to exit an action
- */
-var ExitCode;
-(function (ExitCode) {
-    /**
-     * A code indicating that the action was successful
-     */
-    ExitCode[ExitCode["Success"] = 0] = "Success";
-    /**
-     * A code indicating that the action was a failure
-     */
-    ExitCode[ExitCode["Failure"] = 1] = "Failure";
-})(ExitCode = exports.ExitCode || (exports.ExitCode = {}));
-//-----------------------------------------------------------------------
-// Variables
-//-----------------------------------------------------------------------
-/**
- * Sets env variable for this action and future actions in the job
- * @param name the name of the variable to set
- * @param val the value of the variable. Non-string values will be converted to a string via JSON.stringify
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function exportVariable(name, val) {
-    const convertedVal = command_1.toCommandValue(val);
-    process.env[name] = convertedVal;
-    command_1.issueCommand('set-env', { name }, convertedVal);
-}
-exports.exportVariable = exportVariable;
-/**
- * Registers a secret which will get masked from logs
- * @param secret value of the secret
- */
-function setSecret(secret) {
-    command_1.issueCommand('add-mask', {}, secret);
-}
-exports.setSecret = setSecret;
-/**
- * Prepends inputPath to the PATH (for this action and future actions)
- * @param inputPath
- */
-function addPath(inputPath) {
-    command_1.issueCommand('add-path', {}, inputPath);
-    process.env['PATH'] = `${inputPath}${path.delimiter}${process.env['PATH']}`;
-}
-exports.addPath = addPath;
-/**
- * Gets the value of an input.  The value is also trimmed.
- *
- * @param     name     name of the input to get
- * @param     options  optional. See InputOptions.
- * @returns   string
- */
-function getInput(name, options) {
-    const val = process.env[`INPUT_${name.replace(/ /g, '_').toUpperCase()}`] || '';
-    if (options && options.required && !val) {
-        throw new Error(`Input required and not supplied: ${name}`);
-    }
-    return val.trim();
-}
-exports.getInput = getInput;
-/**
- * Sets the value of an output.
- *
- * @param     name     name of the output to set
- * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function setOutput(name, value) {
-    command_1.issueCommand('set-output', { name }, value);
-}
-exports.setOutput = setOutput;
-/**
- * Enables or disables the echoing of commands into stdout for the rest of the step.
- * Echoing is disabled by default if ACTIONS_STEP_DEBUG is not set.
- *
- */
-function setCommandEcho(enabled) {
-    command_1.issue('echo', enabled ? 'on' : 'off');
-}
-exports.setCommandEcho = setCommandEcho;
-//-----------------------------------------------------------------------
-// Results
-//-----------------------------------------------------------------------
-/**
- * Sets the action status to failed.
- * When the action exits it will be with an exit code of 1
- * @param message add error issue message
- */
-function setFailed(message) {
-    process.exitCode = ExitCode.Failure;
-    error(message);
-}
-exports.setFailed = setFailed;
-//-----------------------------------------------------------------------
-// Logging Commands
-//-----------------------------------------------------------------------
-/**
- * Gets whether Actions Step Debug is on or not
- */
-function isDebug() {
-    return process.env['RUNNER_DEBUG'] === '1';
-}
-exports.isDebug = isDebug;
-/**
- * Writes debug message to user log
- * @param message debug message
- */
-function debug(message) {
-    command_1.issueCommand('debug', {}, message);
-}
-exports.debug = debug;
-/**
- * Adds an error issue
- * @param message error issue message. Errors will be converted to string via toString()
- */
-function error(message) {
-    command_1.issue('error', message instanceof Error ? message.toString() : message);
-}
-exports.error = error;
-/**
- * Adds an warning issue
- * @param message warning issue message. Errors will be converted to string via toString()
- */
-function warning(message) {
-    command_1.issue('warning', message instanceof Error ? message.toString() : message);
-}
-exports.warning = warning;
-/**
- * Writes info to log with console.log.
- * @param message info message
- */
-function info(message) {
-    process.stdout.write(message + os.EOL);
-}
-exports.info = info;
-/**
- * Begin an output group.
- *
- * Output until the next `groupEnd` will be foldable in this group
- *
- * @param name The name of the output group
- */
-function startGroup(name) {
-    command_1.issue('group', name);
-}
-exports.startGroup = startGroup;
-/**
- * End an output group.
- */
-function endGroup() {
-    command_1.issue('endgroup');
-}
-exports.endGroup = endGroup;
-/**
- * Wrap an asynchronous function call in a group.
- *
- * Returns the same type as the function itself.
- *
- * @param name The name of the group
- * @param fn The function to wrap in the group
- */
-function group(name, fn) {
-    return __awaiter(this, void 0, void 0, function* () {
-        startGroup(name);
-        let result;
-        try {
-            result = yield fn();
-        }
-        finally {
-            endGroup();
-        }
-        return result;
-    });
-}
-exports.group = group;
-//-----------------------------------------------------------------------
-// Wrapper action state
-//-----------------------------------------------------------------------
-/**
- * Saves state for current action, the state can only be retrieved by this action's post job execution.
- *
- * @param     name     name of the state to store
- * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function saveState(name, value) {
-    command_1.issueCommand('save-state', { name }, value);
-}
-exports.saveState = saveState;
-/**
- * Gets the value of an state set by this action's main execution.
- *
- * @param     name     name of the state to get
- * @returns   string
- */
-function getState(name) {
-    return process.env[`STATE_${name}`] || '';
-}
-exports.getState = getState;
-//# sourceMappingURL=core.js.map
+module.exports = JSON.parse('{"name":"command-action","version":"0.1.0","description":"GitHub Action that implements the command design pattern","main":"cli.js","scripts":{"build":"ncc build src/cli.js -o dist"},"repository":{"type":"git","url":""},"keywords":["github-action"],"author":"Link-","license":"MIT","bugs":{"url":""},"homepage":"","dependencies":{"@actions/core":"^1.2.5","commander":"^7.2.0","@vercel/ncc":"^0.33.4"}}');
 
 /***/ })
 
-/******/ });
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __nccwpck_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		var threw = true;
+/******/ 		try {
+/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
+/******/ 			threw = false;
+/******/ 		} finally {
+/******/ 			if(threw) delete __webpack_module_cache__[moduleId];
+/******/ 		}
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat */
+/******/ 	
+/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+const meta = __nccwpck_require__(147);
+const Invoker = __nccwpck_require__(722);
+const core = __nccwpck_require__(186)
+const { Command } = __nccwpck_require__(379);
+
+const program = new Command();
+
+/**
+ * We make use of the default option to fetch the input from our action
+ * with core.getInput() only when a value has not been supplied via the CLI.
+ * What this means is that, if you provide these parameters the values from
+ * the action will be ignored.
+ * 
+ * This will guarantee that this tool will operate as an action but has an
+ * alternative trigger via the CLI.
+ */
+program
+  .version(meta.version)
+  .option('-c, --command <command name>', 'Command to execute', core.getInput('command'))
+  .option('-t, --token <token>', 'Personal Access Token or GITHUB_TOKEN', core.getInput('token'))
+  .option('-i, --issue-number <number>', 'Issue number', core.getInput('issue-number'))
+  .option('-o, --org <org_name>', 'Organisation name', core.getInput('org'))
+  .option('-r, --repo <repo_name>', 'Repository name', core.getInput('repo'))
+  .parse();
+
+/**
+ * await won’t work in the top-level code so we have to wrap it with an
+ * anonymous async function and invoke it
+ *
+ * More details: https://javascript.info/async-await
+ */
+(async () => {
+  try {
+    const options = program.opts();
+    const invoker = new Invoker(options);
+    const result = await invoker.executeCommand(options);
+    core.setOutput("result", result);
+  } catch (Error) {
+    core.setFailed(` ⚠️  ${Error.message}`);
+  }
+})()
+})();
+
+module.exports = __webpack_exports__;
+/******/ })()
+;
